@@ -237,9 +237,10 @@
 }
 
 .nav-item.active {
-  background-color: var(--brand-teal);
+  background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-primary-dark) 100%);
   color: var(--text-white);
   font-weight: 600;
+  box-shadow: 0 3px 12px var(--brand-primary-glow);
 }
 
 .nav-item.active-white {
@@ -785,7 +786,8 @@
 
 /* Dark Hero Card */
 .dark-hero-card {
-  background: var(--bg-card-dark);
+  background: linear-gradient(165deg, var(--bg-card-dark) 0%, #08101a 100%);
+  border: 1px solid var(--border-dark-card);
   border-radius: 20px;
   padding: 32px;
   color: white;
