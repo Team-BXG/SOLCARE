@@ -1,17 +1,10 @@
 import { useState } from 'react';
+import EngineerSidebar from './EngineerSidebar';
 import {
-  Sun,
-  Wrench,
-  LayoutDashboard,
-  ClipboardList,
-  CheckCircle2,
-  BarChart3,
-  LogOut,
   TrendingUp,
   Calendar,
   Clock,
   Menu,
-  X,
 } from 'lucide-react';
 
 export default function EngineerPage() {
@@ -77,67 +70,11 @@ export default function EngineerPage() {
       )}
 
       {/* Sidebar */}
-      <aside className={`portal-sidebar ${sidebarOpen ? 'mobile-open' : ''}`}>
-        <button
-          type="button"
-          className="sidebar-close-btn"
-          onClick={() => setSidebarOpen(false)}
-          aria-label="Close navigation menu"
-        >
-          <X size={18} />
-        </button>
-
-        <div className="sidebar-header">
-          <div className="brand-badge">
-            <div className="brand-icon-box cyan">
-              <Sun size={22} />
-            </div>
-            <div className="brand-text">
-              <h2>SOLAR DEMAND</h2>
-              <p>Technical Assessment Module</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Engineer User Card */}
-        <div className="user-identity-card">
-          <div className="user-identity-avatar">
-            <Wrench size={18} />
-          </div>
-          <div className="user-identity-info">
-            <div className="sub-label">TECHNICAL PROFESSIONAL</div>
-            <div className="user-name">Eng. Solomon Bekele</div>
-            <div className="user-desc">Assessment desk · Ethiopia</div>
-          </div>
-        </div>
-
-        <nav className="sidebar-nav">
-          <a href="#dashboard" className="nav-item active" onClick={() => setSidebarOpen(false)}>
-            <LayoutDashboard size={16} />
-            <span>My Dashboard</span>
-          </a>
-          <a href="#queue" className="nav-item" onClick={() => setSidebarOpen(false)}>
-            <ClipboardList size={16} />
-            <span>Assessment Queue</span>
-            <span className="nav-item-badge">4</span>
-          </a>
-          <a href="#completed" className="nav-item" onClick={() => setSidebarOpen(false)}>
-            <CheckCircle2 size={16} />
-            <span>Completed Assessments</span>
-          </a>
-          <a href="#reports" className="nav-item" onClick={() => setSidebarOpen(false)}>
-            <BarChart3 size={16} />
-            <span>Reports</span>
-          </a>
-        </nav>
-
-        <div className="sidebar-bottom">
-          <button type="button" className="logout-btn">
-            <LogOut size={16} />
-            <span>Logout</span>
-          </button>
-        </div>
-      </aside>
+      <EngineerSidebar
+        activeTab="dashboard"
+        sidebarOpen={sidebarOpen}
+        setSidebarOpen={setSidebarOpen}
+      />
 
       {/* Main Content Area */}
       <main className="portal-main">

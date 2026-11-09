@@ -1210,6 +1210,175 @@
   box-shadow: 0 0 12px rgba(0, 168, 132, 0.4);
 }
 
+/* Form Styles for Facility Profile */
+.form-grid-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.form-input {
+  padding: 10px 14px;
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--text-dark);
+  background: #ffffff;
+  outline: none;
+  transition: all 0.15s ease;
+  width: 100%;
+}
+
+.form-input:focus {
+  border-color: var(--brand-primary, #00a884);
+  box-shadow: 0 0 0 3px rgba(0, 168, 132, 0.15);
+}
+
+.form-textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+/* Document Center Styles */
+.document-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid #f1f5f9;
+  transition: background 0.15s ease;
+}
+
+.document-item-row:hover {
+  background: #f8fafc;
+}
+
+.document-item-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+.document-item-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.document-upload-card {
+  background: white;
+  border: 1px solid var(--border-light);
+  border-radius: 20px;
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.document-upload-dropzone {
+  width: 100%;
+  border: 2px dashed #cbd5e1;
+  border-radius: 16px;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #fafbfc;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.document-upload-dropzone:hover {
+  border-color: var(--brand-primary, #00a884);
+  background: #f0fdfa;
+}
+
+.upload-icon-circle {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(0, 168, 132, 0.1);
+  color: var(--brand-primary, #00a884);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+/* Notification Feed Cards */
+.notification-feed-card {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 20px;
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  border-radius: 14px;
+  margin-bottom: 12px;
+  transition: all 0.15s ease;
+}
+
+.notification-feed-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: var(--shadow-sm);
+}
+
+.notification-feed-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.notification-feed-icon {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notification-feed-icon.teal { background: #e6f7f3; color: #00a884; }
+.notification-feed-icon.blue { background: #eff6ff; color: #2563eb; }
+.notification-feed-icon.amber { background: #fef3c7; color: #d97706; }
+
+.notification-feed-content .title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 4px;
+}
+
+.notification-feed-content .text {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.notification-feed-time {
+  font-size: 11px;
+  font-weight: 700;
+  color: #64748b;
+  white-space: nowrap;
+}
+
 /* ========================================================= */
 /* RESPONSIVE DESIGN - TABLETS & PHONES                      */
 /* ========================================================= */

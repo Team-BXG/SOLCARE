@@ -1,14 +1,8 @@
 import { useState } from 'react';
+import SupplierSidebar from './SupplierSidebar';
 import {
-  Zap,
-  LayoutDashboard,
-  Briefcase,
-  Layers,
-  CheckCircle2,
-  FolderOpen,
   PanelLeft,
   Menu,
-  X,
 } from 'lucide-react';
 
 export default function SupplierPortalPage() {
@@ -81,77 +75,11 @@ export default function SupplierPortalPage() {
       )}
 
       {/* Sidebar */}
-      <aside className={`portal-sidebar ${sidebarOpen ? 'mobile-open' : ''}`}>
-        <button
-          type="button"
-          className="sidebar-close-btn"
-          onClick={() => setSidebarOpen(false)}
-          aria-label="Close navigation menu"
-        >
-          <X size={18} />
-        </button>
-
-        <div className="sidebar-header">
-          <div className="brand-badge">
-            <div className="brand-icon-box cyan">
-              <Zap size={20} />
-            </div>
-            <div className="brand-text">
-              <h2>SUPPLIER PORTAL</h2>
-              <p>Hospital Solar Fulfillment</p>
-            </div>
-          </div>
-        </div>
-
-        <nav className="sidebar-nav">
-          <a href="#dashboard" className="nav-item active-white" onClick={() => setSidebarOpen(false)}>
-            <LayoutDashboard size={16} />
-            <div className="nav-item-subtext">
-              <span>Dashboard</span>
-              <span className="sub">Overview</span>
-            </div>
-          </a>
-          <a href="#demands" className="nav-item" onClick={() => setSidebarOpen(false)}>
-            <Briefcase size={16} />
-            <div className="nav-item-subtext">
-              <span>Available Demands</span>
-              <span className="sub">Claim work</span>
-            </div>
-          </a>
-          <a href="#active-jobs" className="nav-item" onClick={() => setSidebarOpen(false)}>
-            <Layers size={16} />
-            <div className="nav-item-subtext">
-              <span>My Active Jobs</span>
-              <span className="sub">In motion</span>
-            </div>
-          </a>
-          <a href="#completed" className="nav-item" onClick={() => setSidebarOpen(false)}>
-            <CheckCircle2 size={16} />
-            <div className="nav-item-subtext">
-              <span>Completed</span>
-              <span className="sub">History</span>
-            </div>
-          </a>
-          <a href="#documents" className="nav-item" onClick={() => setSidebarOpen(false)}>
-            <FolderOpen size={16} />
-            <div className="nav-item-subtext">
-              <span>Documents</span>
-              <span className="sub">Files</span>
-            </div>
-          </a>
-        </nav>
-
-        {/* Operating As Card at Sidebar Bottom */}
-        <div className="sidebar-bottom">
-          <div className="user-identity-card" style={{ marginBottom: 0 }}>
-            <div className="user-identity-info">
-              <div className="sub-label">OPERATING AS</div>
-              <div className="user-name" style={{ fontSize: 13 }}>EthioSolar Solutions PLC</div>
-              <div className="user-desc" style={{ fontSize: 10, marginTop: 2 }}>Direct access enabled · no authentication gate</div>
-            </div>
-          </div>
-        </div>
-      </aside>
+      <SupplierSidebar
+        activeTab="dashboard"
+        sidebarOpen={sidebarOpen}
+        setSidebarOpen={setSidebarOpen}
+      />
 
       {/* Main Content Area */}
       <main className="portal-main">
