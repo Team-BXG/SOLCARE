@@ -2,6 +2,8 @@ import { useState } from 'react';
 import SupplierSidebar from './SupplierSidebar';
 import AvailableDemands from './AvailableDemands';
 import MyActiveJobs from './MyActiveJobs';
+import Completed from './Completed';
+import Documents from './Documents';
 import { PanelLeft, Menu } from 'lucide-react';
 
 function SupplierDashboard() {
@@ -109,6 +111,8 @@ export default function SupplierPortalPage() {
     switch (activeTab) {
       case 'demands':     return <AvailableDemands />;
       case 'active-jobs': return <MyActiveJobs />;
+      case 'completed':   return <Completed />;
+      case 'documents':   return <Documents />;
       default:            return <SupplierDashboard />;
     }
   };
