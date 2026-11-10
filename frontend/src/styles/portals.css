@@ -1624,3 +1624,34 @@
     gap: 4px;
   }
 }
+
+/* =========================================================
+   ENGINEER PORTAL – ASSESSMENT QUEUE & REPORTS ADDITIONS
+   ========================================================= */
+
+/* Queue 2-col grid responsive override */
+.engineer-queue-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: 860px) {
+  .engineer-queue-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Reports 2-col responsive override */
+.engineer-reports-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 860px) {
+  .engineer-reports-grid {
+    grid-template-columns: 1fr;
+  }
+}
