@@ -1,13 +1,10 @@
 import { useState } from 'react';
 import SupplierSidebar from './SupplierSidebar';
-import {
-  PanelLeft,
-  Menu,
-} from 'lucide-react';
+import AvailableDemands from './AvailableDemands';
+import MyActiveJobs from './MyActiveJobs';
+import { PanelLeft, Menu } from 'lucide-react';
 
-export default function SupplierPortalPage() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-
+function SupplierDashboard() {
   const fulfillmentStats = [
     { label: 'OPEN OPPORTUNITIES', value: '2', hint: 'Ready to claim' },
     { label: 'ACTIVE JOBS', value: '1', hint: 'Accepted or in progress' },
@@ -47,6 +44,76 @@ export default function SupplierPortalPage() {
   ];
 
   return (
+    <>
+      {/* Topbar */}
+      <header className="portal-topbar" style={{ alignItems: 'flex-start', flexWrap: 'wrap', gap: 12 }}>
+        <div className="topbar-left">
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#00a884', fontSize: 11, fontWeight: 700, letterSpacing: 0.8, textTransform: 'uppercase', marginBottom: 4 }}>
+            <PanelLeft size={14} />
+            <span>DIRECT SUPPLIER WORKSPACE</span>
+          </div>
+          <h1 className="portal-title">Dashboard</h1>
+        </div>
+        <div className="topbar-right" style={{ maxWidth: 450 }}>
+          <p style={{ fontSize: 12, color: '#64748b', lineHeight: 1.5 }}>
+            A fixed left navigation keeps each section in its own calm, full-panel view for fast demand review, fulfillment tracking, and document control.
+          </p>
+        </div>
+      </header>
+
+      {/* Two-Column Grid */}
+      <div className="portal-two-col-layout">
+        {/* Left Dark Card */}
+        <section className="dark-hero-card">
+          <div className="milestone-tag">OVERVIEW STATS</div>
+          <h2 className="hero-heading" style={{ fontSize: 32 }}>Fulfillment at a glance.</h2>
+          <div className="dark-stats-grid-2x2">
+            {fulfillmentStats.map((stat) => (
+              <div key={stat.label} className="dark-stat-cell">
+                <div className="stat-title">{stat.label}</div>
+                <div className="stat-number">{stat.value}</div>
+                <div className="stat-hint">{stat.hint}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Right White Card */}
+        <section className="portal-panel-card">
+          <h3 className="section-heading-sm" style={{ fontSize: 18, marginBottom: 20 }}>
+            Recent activity
+          </h3>
+          <div>
+            {recentActivity.map((act) => (
+              <div key={act.reqId} className="activity-card-item">
+                <div className="activity-card-header">
+                  <span className="req-id">{act.reqId}</span>
+                  <span className={`badge-status ${act.statusClass}`}>{act.status}</span>
+                </div>
+                <div className="item-title">{act.title}</div>
+                <div className="item-desc">{act.desc}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+      </div>
+    </>
+  );
+}
+
+export default function SupplierPortalPage() {
+  const [activeTab, setActiveTab] = useState('dashboard');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'demands':     return <AvailableDemands />;
+      case 'active-jobs': return <MyActiveJobs />;
+      default:            return <SupplierDashboard />;
+    }
+  };
+
+  return (
     <div className="portal-layout">
       {/* Mobile Top Bar */}
       <div className="mobile-header-bar">
@@ -76,67 +143,15 @@ export default function SupplierPortalPage() {
 
       {/* Sidebar */}
       <SupplierSidebar
-        activeTab="dashboard"
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
         sidebarOpen={sidebarOpen}
         setSidebarOpen={setSidebarOpen}
       />
 
-      {/* Main Content Area */}
+      {/* Main Content */}
       <main className="portal-main">
-        {/* Topbar */}
-        <header className="portal-topbar" style={{ alignItems: 'flex-start', flexWrap: 'wrap', gap: 12 }}>
-          <div className="topbar-left">
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#00a884', fontSize: 11, fontWeight: 700, letterSpacing: 0.8, textTransform: 'uppercase', marginBottom: 4 }}>
-              <PanelLeft size={14} />
-              <span>DIRECT SUPPLIER WORKSPACE</span>
-            </div>
-            <h1 className="portal-title">Dashboard</h1>
-          </div>
-          <div className="topbar-right" style={{ maxWidth: 450 }}>
-            <p style={{ fontSize: 12, color: '#64748b', lineHeight: 1.5 }}>
-              A fixed left navigation keeps each section in its own calm, full-panel view for fast demand review, fulfillment tracking, and document control.
-            </p>
-          </div>
-        </header>
-
-        {/* Two-Column Grid */}
-        <div className="portal-two-col-layout">
-          {/* Left Dark Card */}
-          <section className="dark-hero-card">
-            <div className="milestone-tag">OVERVIEW STATS</div>
-            <h2 className="hero-heading" style={{ fontSize: 32 }}>Fulfillment at a glance.</h2>
-
-            <div className="dark-stats-grid-2x2">
-              {fulfillmentStats.map((stat) => (
-                <div key={stat.label} className="dark-stat-cell">
-                  <div className="stat-title">{stat.label}</div>
-                  <div className="stat-number">{stat.value}</div>
-                  <div className="stat-hint">{stat.hint}</div>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* Right White Card */}
-          <section className="portal-panel-card">
-            <h3 className="section-heading-sm" style={{ fontSize: 18, marginBottom: 20 }}>
-              Recent activity
-            </h3>
-
-            <div>
-              {recentActivity.map((act) => (
-                <div key={act.reqId} className="activity-card-item">
-                  <div className="activity-card-header">
-                    <span className="req-id">{act.reqId}</span>
-                    <span className={`badge-status ${act.statusClass}`}>{act.status}</span>
-                  </div>
-                  <div className="item-title">{act.title}</div>
-                  <div className="item-desc">{act.desc}</div>
-                </div>
-              ))}
-            </div>
-          </section>
-        </div>
+        {renderContent()}
       </main>
     </div>
   );
