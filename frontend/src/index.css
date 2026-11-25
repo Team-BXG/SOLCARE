@@ -3,11 +3,11 @@
 :root, [data-theme="emerald"] {
   --font-main: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   
-  /* Primary Brand: Solar Vitality Emerald (Clean Healthcare & Solar) */
-  --brand-primary: #00a884;
-  --brand-primary-light: #e6f7f3;
-  --brand-primary-dark: #008f70;
-  --brand-primary-glow: rgba(0, 168, 132, 0.35);
+  /* Primary Brand: Clean Royal Electric Blue (#155dfc) */
+  --brand-primary: #155dfc;
+  --brand-primary-light: #eff5ff;
+  --brand-primary-dark: #0d47d1;
+  --brand-primary-glow: rgba(21, 93, 252, 0.28);
   
   --brand-teal: var(--brand-primary);
   --brand-teal-light: var(--brand-primary-light);
@@ -23,78 +23,78 @@
   --brand-cyan-light: #ecfeff;
   
   /* Clinical Status Tints */
-  --brand-blue: #2563eb;
-  --brand-blue-light: #eff6ff;
+  --brand-blue: #155dfc;
+  --brand-blue-light: #eff5ff;
   --brand-red: #ef4444;
   --brand-red-light: #fee2e2;
   --brand-green: #10b981;
   --brand-green-light: #d1fae5;
 
-  /* Executive Dark Surfaces (Deep Obsidian Slate) */
-  --bg-app: #f4f7fa;
-  --bg-sidebar: #0b131d;
-  --bg-sidebar-card: #121e2c;
-  --bg-card: #ffffff;
+  /* SEDMS High-Clarity Surface Palette */
+  --bg-app: #f1f5f9; /* Soft light gray/blue page background */
+  --bg-sidebar: #ffffff; /* Clean white sidebar */
+  --bg-sidebar-card: #f8fafc; /* Subtle muted gray-white card inside sidebar */
+  --bg-card: #ffffff; /* Crisp white main cards */
   --bg-card-dark: #0d1824;
   --bg-card-dark-inner: #142334;
   
   /* Typography Colors */
-  --text-dark: #0c1726;
-  --text-body: #334155;
-  --text-muted: #64748b;
-  --text-light-muted: #94a3b8;
+  --text-dark: #1e293b; /* Deep slate title text */
+  --text-body: #334155; /* Slate body text */
+  --text-muted: #64748b; /* Soft muted label text */
+  --text-light-muted: #64748b;
   --text-white: #ffffff;
   
   /* Subtle Refined Borders */
   --border-light: #e2e8f0;
-  --border-sidebar: #172637;
+  --border-sidebar: #e2e8f0;
   --border-dark-card: #1d3249;
   
-  /* Elevated Soft Shadows */
-  --shadow-sm: 0 1px 3px 0 rgba(15, 23, 42, 0.05);
-  --shadow-card: 0 4px 12px -2px rgba(15, 23, 42, 0.06), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
-  --shadow-lg: 0 12px 28px -6px rgba(11, 19, 29, 0.35);
+  /* Elevated Soft Shadows matching SEDMS */
+  --shadow-sm: 0 1px 3px 0 rgba(15, 23, 42, 0.04);
+  --shadow-card: 0 2px 8px -1px rgba(15, 23, 42, 0.05), 0 1px 3px -1px rgba(15, 23, 42, 0.03);
+  --shadow-lg: 0 10px 25px -4px rgba(15, 23, 42, 0.08);
 }
 
-/* Palette 2: Deep Solar Cobalt & High-Tech Grid */
+/* Palette 2: High-Tech Cobalt Variant */
 [data-theme="cobalt"] {
-  --brand-primary: #2563eb;
-  --brand-primary-light: #eff6ff;
-  --brand-primary-dark: #1d4ed8;
-  --brand-primary-glow: rgba(37, 99, 235, 0.35);
-  --brand-teal: #2563eb;
-  --brand-teal-light: #eff6ff;
-  --brand-teal-dark: #1d4ed8;
+  --brand-primary: #155dfc;
+  --brand-primary-light: #eff5ff;
+  --brand-primary-dark: #0d47d1;
+  --brand-primary-glow: rgba(21, 93, 252, 0.3);
+  --brand-teal: #155dfc;
+  --brand-teal-light: #eff5ff;
+  --brand-teal-dark: #0d47d1;
   --brand-cyan: #0ea5e9;
   --brand-amber: #f97316;
   
-  --bg-app: #f0f4f9;
-  --bg-sidebar: #091220;
-  --bg-sidebar-card: #111e33;
+  --bg-app: #f1f5f9;
+  --bg-sidebar: #ffffff;
+  --bg-sidebar-card: #f8fafc;
   --bg-card-dark: #0c182d;
   --bg-card-dark-inner: #152442;
-  --border-sidebar: #192a45;
+  --border-sidebar: #e2e8f0;
   --border-dark-card: #1c3358;
 }
 
-/* Palette 3: Nordic Sage & Warm Sand */
+/* Palette 3: Modern Teal Variant */
 [data-theme="nordic"] {
-  --brand-primary: #0d9488;
-  --brand-primary-light: #f0fdfa;
-  --brand-primary-dark: #0f766e;
-  --brand-primary-glow: rgba(13, 148, 136, 0.35);
-  --brand-teal: #0d9488;
-  --brand-teal-light: #f0fdfa;
-  --brand-teal-dark: #0f766e;
-  --brand-cyan: #14b8a6;
+  --brand-primary: #0284c7;
+  --brand-primary-light: #f0f9ff;
+  --brand-primary-dark: #0369a1;
+  --brand-primary-glow: rgba(2, 132, 199, 0.3);
+  --brand-teal: #0284c7;
+  --brand-teal-light: #f0f9ff;
+  --brand-teal-dark: #0369a1;
+  --brand-cyan: #06b6d4;
   --brand-amber: #eab308;
   
-  --bg-app: #f7f7f5;
-  --bg-sidebar: #101c1a;
-  --bg-sidebar-card: #182a27;
+  --bg-app: #f1f5f9;
+  --bg-sidebar: #ffffff;
+  --bg-sidebar-card: #f8fafc;
   --bg-card-dark: #132422;
   --bg-card-dark-inner: #1d3532;
-  --border-sidebar: #1e3330;
+  --border-sidebar: #e2e8f0;
   --border-dark-card: #23423f;
 }
 

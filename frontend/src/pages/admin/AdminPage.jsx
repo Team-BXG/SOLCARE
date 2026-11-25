@@ -8,25 +8,46 @@ import Suppliers from './Suppliers';
 import Reports from './Reports';
 import Settings from './Settings';
 import DemandModal from './DemandModal';
-import {
-  initialStats,
-  initialFacilities,
-  initialDemands,
-  initialTechnicalAssessments,
-  initialSuppliers,
-} from './mockData';
+import FacilityDetailModal from './FacilityDetailModal';
+import SupplierDetailModal from './SupplierDetailModal';
+import { useSolcare } from '../../context/SolcareContext';
 import { Menu } from 'lucide-react';
 
 export default function AdminPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('dashboard');
-  const [selectedDemand, setSelectedDemand] = useState(null);
 
-  const stats = initialStats;
-  const facilities = initialFacilities;
-  const demands = initialDemands;
-  const technicalAssessments = initialTechnicalAssessments;
-  const suppliers = initialSuppliers;
+  // Modals state
+  const [selectedDemand, setSelectedDemand] = useState(null);
+  const [selectedFacility, setSelectedFacility] = useState(null);
+  const [selectedSupplier, setSelectedSupplier] = useState(null);
+
+  // Read live synchronized state from Context
+  const { demands, facilities, suppliers, stats } = useSolcare();
+
+  // Dynamically compute technical assessment records from live demands
+  const technicalAssessments = demands.map((d) => ({
+    facility: d.facility,
+    status: d.techAssessment || 'Not Started',
+    techClass: d.techClass || 'not-started',
+    supplier: d.supplier || '—',
+    updated: d.updatedDate?.replace('Updated ', '') || d.date,
+    demand: d,
+  }));
+
+  // Dynamically compute supplier breakdown from live demands
+  const dynamicSuppliers = suppliers.map((sup) => {
+    const assigned = demands.filter((d) => (d.supplier || '').toLowerCase() === (sup.name || '').toLowerCase());
+    const breakdownMap = {};
+    assigned.forEach((d) => {
+      breakdownMap[d.status] = (breakdownMap[d.status] || 0) + 1;
+    });
+    return {
+      name: sup.name,
+      assignedDemands: assigned.length,
+      breakdown: Object.entries(breakdownMap).map(([label, count]) => ({ label, count })),
+    };
+  });
 
   const handleExportCSV = () => {
     const headers = ['Facility,ID,Type,Region,Requirement,Status,TechnicalAssessment,Supplier,Date\n'];
@@ -117,11 +138,15 @@ export default function AdminPage() {
             demands={demands}
             onSelectDemand={setSelectedDemand}
             onExportCSV={handleExportCSV}
+            onNavigateTab={setActiveTab}
           />
         )}
 
         {activeTab === 'facilities' && (
-          <Facilities facilities={facilities} />
+          <Facilities
+            facilities={facilities}
+            onSelectFacility={setSelectedFacility}
+          />
         )}
 
         {activeTab === 'demands' && (
@@ -133,11 +158,17 @@ export default function AdminPage() {
         )}
 
         {activeTab === 'technical' && (
-          <TechnicalAssessments assessments={technicalAssessments} />
+          <TechnicalAssessments
+            assessments={technicalAssessments}
+            onSelectAssessment={(dem) => setSelectedDemand(dem)}
+          />
         )}
 
         {activeTab === 'suppliers' && (
-          <Suppliers suppliers={suppliers} />
+          <Suppliers
+            suppliers={dynamicSuppliers}
+            onSelectSupplier={setSelectedSupplier}
+          />
         )}
 
         {activeTab === 'reports' && (
@@ -149,11 +180,39 @@ export default function AdminPage() {
         )}
       </main>
 
-      {/* Demand Detail Modal Component */}
-      <DemandModal
-        selectedDemand={selectedDemand}
-        onClose={() => setSelectedDemand(null)}
-      />
+      {/* Demand Detail & Workflow Modal */}
+      {selectedDemand && (
+        <DemandModal
+          selectedDemand={selectedDemand}
+          onClose={() => setSelectedDemand(null)}
+        />
+      )}
+
+      {/* Facility Details Modal */}
+      {selectedFacility && (
+        <FacilityDetailModal
+          facility={selectedFacility}
+          demands={demands}
+          onClose={() => setSelectedFacility(null)}
+          onSelectDemand={(dem) => {
+            setSelectedFacility(null);
+            setSelectedDemand(dem);
+          }}
+        />
+      )}
+
+      {/* Supplier Details Modal */}
+      {selectedSupplier && (
+        <SupplierDetailModal
+          supplier={selectedSupplier}
+          demands={demands}
+          onClose={() => setSelectedSupplier(null)}
+          onSelectDemand={(dem) => {
+            setSelectedSupplier(null);
+            setSelectedDemand(dem);
+          }}
+        />
+      )}
     </div>
   );
 }

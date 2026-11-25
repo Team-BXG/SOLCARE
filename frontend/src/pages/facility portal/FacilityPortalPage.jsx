@@ -7,14 +7,8 @@ import Documents from './Documents';
 import Notifications from './Notifications';
 import SubmitDemand from './SubmitDemand';
 import RequestModal from './RequestModal';
-import {
-  initialProfileData,
-  horizontalStats,
-  activities,
-  submittedRequests,
-  documentsList,
-  notificationsList,
-} from './mockData';
+import { initialProfileData, documentsList } from './mockData';
+import { useSolcare } from '../../context/SolcareContext';
 import { Menu } from 'lucide-react';
 
 export default function FacilityPortalPage() {
@@ -22,6 +16,54 @@ export default function FacilityPortalPage() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [profileData, setProfileData] = useState(initialProfileData);
+
+  // Synchronized Solcare Context
+  const { demands, notifications, registerDemand } = useSolcare();
+
+  // Dynamically calculate horizontal metrics for this facility
+  const activeDemandsCount = demands.filter(
+    (d) => d.status !== 'Completed' && d.status !== 'Returned'
+  ).length;
+
+  const totalCapacityKwp = demands.reduce((acc, d) => {
+    const kw = parseFloat((d.capacity || d.requirement || '0').replace(/[^0-9.]/g, '')) || 0;
+    return acc + kw;
+  }, 0);
+
+  const horizontalStats = [
+    {
+      label: 'ACTIVE REQUESTS',
+      value: String(activeDemandsCount).padStart(2, '0'),
+      sub: `${demands.filter((d) => d.techAssessment === 'In Review' || d.status.includes('Verification')).length} under technical review`,
+    },
+    {
+      label: 'APPROVED CAPACITY',
+      value: `${totalCapacityKwp || 35}kWp`,
+      sub: 'Ready for supplier release',
+    },
+    {
+      label: 'DOCUMENTS',
+      value: '12',
+      sub: 'Synchronized with health bureau',
+    },
+    {
+      label: 'CRITICAL LOAD',
+      value: '25kW',
+      sub: 'ICU, OR, laboratory protected',
+    },
+  ];
+
+  // Derive workflow activities from actual demands
+  const activities = demands.slice(0, 4).map((d) => ({
+    date: d.date?.slice(0, 6)?.toUpperCase() || 'RECENT',
+    title: `${d.facility}: ${d.requirement || d.summary}`,
+    desc: `Status: ${d.status} · Supply stage: ${d.supplyStage || 'Pending'}`,
+  }));
+
+  const handleDemandSubmitted = (newDemandData) => {
+    registerDemand(newDemandData);
+    setActiveTab('requests');
+  };
 
   return (
     <div className="portal-layout">
@@ -79,13 +121,14 @@ export default function FacilityPortalPage() {
         {activeTab === 'submit' && (
           <SubmitDemand
             onNavigate={setActiveTab}
+            onDemandSubmitted={handleDemandSubmitted}
           />
         )}
 
         {activeTab === 'requests' && (
           <MyRequests
-            requests={submittedRequests}
             onSelectRequest={setSelectedRequest}
+            onEditRequest={setSelectedRequest}
           />
         )}
 
@@ -97,7 +140,7 @@ export default function FacilityPortalPage() {
 
         {activeTab === 'notifications' && (
           <Notifications
-            notifications={notificationsList}
+            notifications={notifications}
           />
         )}
       </main>

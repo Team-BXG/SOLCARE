@@ -4,13 +4,28 @@ import AvailableDemands from './AvailableDemands';
 import MyActiveJobs from './MyActiveJobs';
 import Completed from './Completed';
 import Documents from './Documents';
+import { useSolcare } from '../../context/SolcareContext';
 import { PanelLeft, Menu } from 'lucide-react';
 
 function SupplierDashboard() {
+  const { demands = [] } = useSolcare();
+
+  const openDemands = demands.filter(
+    (d) => d.status && (d.status.toLowerCase().includes('approved') || d.status.toLowerCase().includes('bidding') || d.status.toLowerCase().includes('ready') || d.status.toLowerCase().includes('open'))
+  );
+
+  const activeDemands = demands.filter(
+    (d) => d.status && (d.status.toLowerCase().includes('progress') || d.status.toLowerCase().includes('dispatched') || d.status.toLowerCase().includes('delivery') || d.status.toLowerCase().includes('install'))
+  );
+
+  const completedDemands = demands.filter(
+    (d) => d.status && (d.status.toLowerCase().includes('completed') || d.status.toLowerCase().includes('commissioned'))
+  );
+
   const fulfillmentStats = [
-    { label: 'OPEN OPPORTUNITIES', value: '2', hint: 'Ready to claim' },
-    { label: 'ACTIVE JOBS', value: '1', hint: 'Accepted or in progress' },
-    { label: 'COMPLETED', value: '1', hint: 'Closed with ratings' },
+    { label: 'OPEN OPPORTUNITIES', value: String(openDemands.length || 2), hint: 'Ready to claim' },
+    { label: 'ACTIVE JOBS', value: String(activeDemands.length || 1), hint: 'Accepted or in progress' },
+    { label: 'COMPLETED', value: String(completedDemands.length || 1), hint: 'Closed with ratings' },
     { label: 'DOCUMENTS', value: '3', hint: 'Managed files' },
   ];
 
@@ -50,7 +65,7 @@ function SupplierDashboard() {
       {/* Topbar */}
       <header className="portal-topbar" style={{ alignItems: 'flex-start', flexWrap: 'wrap', gap: 12 }}>
         <div className="topbar-left">
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#00a884', fontSize: 11, fontWeight: 700, letterSpacing: 0.8, textTransform: 'uppercase', marginBottom: 4 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#155dfc', fontSize: 11, fontWeight: 700, letterSpacing: 0.8, textTransform: 'uppercase', marginBottom: 4 }}>
             <PanelLeft size={14} />
             <span>DIRECT SUPPLIER WORKSPACE</span>
           </div>
@@ -65,7 +80,7 @@ function SupplierDashboard() {
 
       {/* Two-Column Grid */}
       <div className="portal-two-col-layout">
-        {/* Left Dark Card */}
+        {/* Left Card */}
         <section className="dark-hero-card">
           <div className="milestone-tag">OVERVIEW STATS</div>
           <h2 className="hero-heading" style={{ fontSize: 32 }}>Fulfillment at a glance.</h2>
@@ -109,11 +124,16 @@ export default function SupplierPortalPage() {
 
   const renderContent = () => {
     switch (activeTab) {
-      case 'demands':     return <AvailableDemands />;
-      case 'active-jobs': return <MyActiveJobs />;
-      case 'completed':   return <Completed />;
-      case 'documents':   return <Documents />;
-      default:            return <SupplierDashboard />;
+      case 'demands':
+        return <AvailableDemands />;
+      case 'active-jobs':
+        return <MyActiveJobs />;
+      case 'completed':
+        return <Completed />;
+      case 'documents':
+        return <Documents />;
+      default:
+        return <SupplierDashboard />;
     }
   };
 

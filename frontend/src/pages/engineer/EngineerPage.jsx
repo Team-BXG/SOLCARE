@@ -3,6 +3,7 @@ import EngineerSidebar from './EngineerSidebar';
 import AssessmentQueue from './AssessmentQueue';
 import CompletedAssessments from './CompletedAssessments';
 import Reports from './Reports';
+import { useSolcare } from '../../context/SolcareContext';
 import {
   TrendingUp,
   Calendar,
@@ -10,37 +11,72 @@ import {
   Menu,
 } from 'lucide-react';
 
-function EngineerDashboard() {
+function EngineerDashboard({ onNavigateToQueue }) {
+  const { demands = [] } = useSolcare();
+
+  const openDemands = demands.filter(
+    (d) => !d.status || d.status.toLowerCase().includes('review') || d.status.toLowerCase().includes('submitted') || d.status.toLowerCase().includes('pending')
+  );
+
+  const totalRecommendedKwp = demands.reduce(
+    (sum, d) => sum + (parseFloat(d.recommendedKwp || d.capacity || 0) || 0),
+    0
+  );
+
   const overviewStats = [
-    { label: 'OPEN DEMAND', value: '18', desc: '4 high priority facilities' },
-    { label: 'DUE THIS WEEK', value: '7', desc: 'Sidama and Oromia cluster' },
-    { label: 'AVG. READINESS', value: '82%', desc: 'Across completed assessments' },
-    { label: 'RECOMMENDED CAPACITY', value: '412 kWp', desc: 'Approved technical sizing' },
+    {
+      label: 'OPEN DEMAND',
+      value: String(openDemands.length || 18),
+      desc: `${demands.filter((d) => d.severity === 'Critical').length || 4} high priority facilities`,
+    },
+    {
+      label: 'DUE THIS WEEK',
+      value: String(Math.min(7, openDemands.length || 7)),
+      desc: 'Sidama and Oromia cluster',
+    },
+    {
+      label: 'AVG. READINESS',
+      value: '84%',
+      desc: 'Across completed assessments',
+    },
+    {
+      label: 'RECOMMENDED CAPACITY',
+      value: `${Math.round(totalRecommendedKwp) || 412} kWp`,
+      desc: 'Approved technical sizing',
+    },
   ];
 
-  const upcomingAssessments = [
-    {
-      facility: 'Hawassa General Hospital',
-      region: 'Sidama',
-      scope: '35 kWp review',
-      time: 'Today · 11:30',
-      active: true,
-    },
-    {
-      facility: 'Gondar University Hospital',
-      region: 'Amhara',
-      scope: '60 kWp design brief',
-      time: 'Tomorrow · 09:00',
-      active: false,
-    },
-    {
-      facility: 'Jimma Health Center',
-      region: 'Oromia',
-      scope: '15 kWp validation',
-      time: 'Fri · 14:00',
-      active: false,
-    },
-  ];
+  const upcomingAssessments = demands.length > 0
+    ? demands.slice(0, 5).map((d, index) => ({
+        facility: d.facility || d.facilityName,
+        region: d.region,
+        scope: d.requirement || `${d.capacity || 35} kWp review`,
+        time: index === 0 ? 'Today · 11:30' : index === 1 ? 'Tomorrow · 09:00' : 'Scheduled',
+        active: index === 0,
+      }))
+    : [
+        {
+          facility: 'Hawassa General Hospital',
+          region: 'Sidama',
+          scope: '35 kWp review',
+          time: 'Today · 11:30',
+          active: true,
+        },
+        {
+          facility: 'Gondar University Hospital',
+          region: 'Amhara',
+          scope: '60 kWp design brief',
+          time: 'Tomorrow · 09:00',
+          active: false,
+        },
+        {
+          facility: 'Jimma Health Center',
+          region: 'Oromia',
+          scope: '15 kWp validation',
+          time: 'Fri · 14:00',
+          active: false,
+        },
+      ];
 
   return (
     <>
@@ -54,7 +90,7 @@ function EngineerDashboard() {
         <div className="topbar-right">
           <div className="header-badge-pill dark">
             <Clock size={12} style={{ color: '#00a884' }} />
-            <span>TODAY • Jan 18 · 7 open decisions</span>
+            <span>TODAY • {openDemands.length || 7} open decisions</span>
           </div>
         </div>
       </header>
@@ -67,6 +103,7 @@ function EngineerDashboard() {
             <span style={{ fontSize: 18, fontWeight: 800 }}>Overview stats</span>
             <TrendingUp size={18} color="#00a884" />
           </div>
+
           <div className="light-stats-grid-2x2">
             {overviewStats.map((stat) => (
               <div key={stat.label} className="light-stat-box">
@@ -80,10 +117,30 @@ function EngineerDashboard() {
 
         {/* Upcoming Assessments Card */}
         <section className="portal-panel-card">
-          <div className="section-heading-sm">
-            <span style={{ fontSize: 18, fontWeight: 800 }}>Upcoming assessments</span>
-            <Calendar size={18} color="#64748b" />
+          <div className="section-heading-sm" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ fontSize: 18, fontWeight: 800 }}>Upcoming assessments</span>
+              <Calendar size={18} color="#64748b" />
+            </div>
+            {onNavigateToQueue && (
+              <button
+                type="button"
+                onClick={onNavigateToQueue}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: '#155dfc',
+                  fontSize: 12,
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  padding: 0,
+                }}
+              >
+                View Queue →
+              </button>
+            )}
           </div>
+
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 14 }}>
             {upcomingAssessments.map((item) => (
               <div
@@ -123,10 +180,14 @@ export default function EngineerPage() {
 
   const renderContent = () => {
     switch (activeTab) {
-      case 'queue':       return <AssessmentQueue />;
-      case 'completed':   return <CompletedAssessments />;
-      case 'reports':     return <Reports />;
-      default:            return <EngineerDashboard />;
+      case 'queue':
+        return <AssessmentQueue />;
+      case 'completed':
+        return <CompletedAssessments />;
+      case 'reports':
+        return <Reports />;
+      default:
+        return <EngineerDashboard onNavigateToQueue={() => setActiveTab('queue')} />;
     }
   };
 
