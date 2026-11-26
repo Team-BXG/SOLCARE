@@ -1,3 +1,52 @@
+/* =========================================================
+   THEME VARIABLES  (data-theme attribute on <html>)
+   Default / Emerald theme is baseline; others override.
+   ========================================================= */
+
+/* Emerald (default) */
+:root,
+[data-theme="emerald"] {
+  --brand-primary:  #00a884;
+  --brand-teal:     #00a884;
+  --brand-cyan:     #06b6d4;
+  --bg-app:         #f4f7fa;
+  --bg-sidebar:     #0b131d;
+  --text-dark:      #0c1726;
+  --text-muted:     #64748b;
+  --border-light:   #e2e8f0;
+  --shadow-sm:      0 1px 3px rgba(0,0,0,0.06);
+}
+
+/* Nordic — slate-blue palette */
+[data-theme="nordic"] {
+  --brand-primary:  #4f8ef7;
+  --brand-teal:     #4f8ef7;
+  --brand-cyan:     #38bdf8;
+  --bg-app:         #eef2f9;
+  --bg-sidebar:     #0f1e35;
+  --text-dark:      #0d1b2e;
+  --text-muted:     #5a6e8a;
+  --border-light:   #d0daea;
+  --shadow-sm:      0 1px 4px rgba(15,30,53,0.08);
+}
+
+/* Cobalt — deep-blue accent */
+[data-theme="cobalt"] {
+  --brand-primary:  #2563eb;
+  --brand-teal:     #2563eb;
+  --brand-cyan:     #0ea5e9;
+  --bg-app:         #f0f4ff;
+  --bg-sidebar:     #0a1428;
+  --text-dark:      #0c1a2e;
+  --text-muted:     #4f6082;
+  --border-light:   #cdd8f0;
+  --shadow-sm:      0 1px 4px rgba(10,20,40,0.08);
+}
+
+/* =========================================================
+   GLOBAL PORTAL LAYOUT
+   ========================================================= */
+
 /* Global Portal Layout */
 .portal-layout {
   display: flex;
@@ -1208,9 +1257,9 @@
 }
 
 .switcher-pill.active {
-  background: #155dfc;
+  background: var(--brand-primary, #155dfc);
   color: #ffffff;
-  border-color: #155dfc;
+  border-color: var(--brand-primary, #155dfc);
   box-shadow: 0 2px 8px rgba(21, 93, 252, 0.3);
 }
 

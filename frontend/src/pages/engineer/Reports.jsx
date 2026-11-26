@@ -1,5 +1,20 @@
 import { useState } from 'react';
 import { Clock, Download, TrendingUp, AlertCircle, Info } from 'lucide-react';
+import { useSolcare } from '../../context/SolcareContext';
+
+// Helper: generate and trigger a CSV download
+function downloadCSV(filename, headers, rows) {
+  const blob = new Blob(
+    [headers.join(',') + '\n' + rows.map(r => r.join(',')).join('\n')],
+    { type: 'text/csv;charset=utf-8;' }
+  );
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
 
 // Demand by critical area bar data (from the image)
 const demandByArea = [
@@ -102,7 +117,41 @@ function BarRow({ label, pct, color }) {
 }
 
 export default function Reports() {
+  const { demands } = useSolcare();
   const [hoveredCard, setHoveredCard] = useState(null);
+
+  const assessed = (demands || []).filter(d => d.techAssessment === 'Complete' || d.status === 'Technically Assessed');
+  const regions = [...new Set((demands || []).map(d => d.region).filter(Boolean))];
+
+  const handleExportReportCards = () => {
+    downloadCSV(
+      'engineer_report_cards.csv',
+      ['Metric', 'Value', 'Note'],
+      [
+        ['Regional coverage', `${regions.length || 12} regions`, 'Active demand signals captured'],
+        ['Procurement ready', `${assessed.length > 0 ? Math.round((assessed.length / Math.max(demands.length, 1)) * 100) : 63}%`, 'Finished assessments with clear bill of quantities'],
+        ['Diesel risk reduced', '28 tons', 'Estimated annual CO₂ reduction'],
+      ]
+    );
+  };
+
+  const handleDownloadFullReport = () => {
+    const rows = (demands || []).map(d => [
+      `"${d.id}"`,
+      `"${d.facility}"`,
+      `"${d.region || ''}"`,
+      `"${d.status}"`,
+      `"${d.techAssessment || 'Not Started'}"`,
+      `"${d.capacity || d.requirement || ''}"`,
+      `"${d.decision || 'Pending'}"`,
+      `"${d.lastUpdated || d.date || ''}"`,
+    ]);
+    downloadCSV(
+      'solcare_full_assessment_report.csv',
+      ['ID', 'Facility', 'Region', 'Status', 'Technical Assessment', 'Capacity', 'Decision', 'Last Updated'],
+      rows
+    );
+  };
 
   return (
     <>
@@ -138,7 +187,7 @@ export default function Reports() {
             <span style={{ fontSize: 18, fontWeight: 800 }}>Report cards</span>
             <button
               type="button"
-              onClick={() => alert('Downloading full report...')}
+              onClick={handleExportReportCards}
               style={{
                 display: 'flex', alignItems: 'center', gap: 5,
                 fontSize: 12, fontWeight: 600, color: '#64748b',
@@ -318,7 +367,7 @@ export default function Reports() {
           {/* Download CTA */}
           <button
             type="button"
-            onClick={() => alert('Downloading full report PDF...')}
+            onClick={handleDownloadFullReport}
             style={{
               marginTop: 18,
               display: 'flex',

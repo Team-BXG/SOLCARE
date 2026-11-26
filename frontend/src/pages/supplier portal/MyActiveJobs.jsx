@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { MapPin, Calendar, ChevronRight, X, Upload, FileText, CheckCircle2, Clock, PanelLeft, AlertCircle } from 'lucide-react';
 
-const activeJobs = [
+// Seed/demo job always shown so the page isn't empty on first load
+const seedJobs = [
   {
     id: 'REQ-2025-003',
     status: 'In Progress',
@@ -20,6 +21,7 @@ const activeJobs = [
       { label: 'Commissioning & handover', done: false, date: 'Mar 19' },
     ],
     progress: 60,
+    isSeed: true,
   },
 ];
 
@@ -183,8 +185,13 @@ function JobDetailModal({ job, onClose }) {
   );
 }
 
-export default function MyActiveJobs() {
+export default function MyActiveJobs({ acceptedJobs = [] }) {
   const [selectedJob, setSelectedJob] = useState(null);
+
+  // Merge: newly accepted jobs (from parent) + seed demo jobs not already in accepted list
+  const acceptedIds = new Set(acceptedJobs.map(j => j.id));
+  const filteredSeed = seedJobs.filter(s => !acceptedIds.has(s.id));
+  const allJobs = [...acceptedJobs, ...filteredSeed];
 
   return (
     <>
@@ -207,7 +214,13 @@ export default function MyActiveJobs() {
 
       {/* Job Cards */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-        {activeJobs.map(job => (
+        {allJobs.length === 0 ? (
+          <div style={{ background: 'white', border: '1px solid #e2e8f0', borderRadius: 20, padding: '56px 32px', textAlign: 'center' }}>
+            <AlertCircle size={40} style={{ color: '#f59e0b', marginBottom: 14 }} />
+            <div style={{ fontSize: 18, fontWeight: 800, color: '#0c1726', marginBottom: 6 }}>No active jobs yet</div>
+            <div style={{ fontSize: 13, color: '#64748b' }}>Accept a demand from Available Demands to get started.</div>
+          </div>
+        ) : allJobs.map(job => (
           <div key={job.id} className="portal-panel-card" style={{ gap: 0 }}>
             {/* Top row */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>

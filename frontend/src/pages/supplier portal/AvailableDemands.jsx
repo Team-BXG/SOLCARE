@@ -115,7 +115,7 @@ function AcceptConfirmModal({ demand, onConfirm, onClose }) {
           </button>
           <button
             type="button"
-            onClick={() => { onConfirm(demand.id); onClose(); }}
+            onClick={() => { onConfirm(demand); onClose(); }}
             style={{
               padding: '9px 22px', borderRadius: 8, border: 'none',
               background: 'linear-gradient(135deg, #00a884 0%, #008f70 100%)',
@@ -133,15 +133,14 @@ function AcceptConfirmModal({ demand, onConfirm, onClose }) {
   );
 }
 
-export default function AvailableDemands() {
+export default function AvailableDemands({ acceptedJobIds = [], onAccept }) {
   const [selectedDemand, setSelectedDemand] = useState(null);
-  const [accepted, setAccepted] = useState(new Set());
 
-  const handleAccept = (id) => {
-    setAccepted(prev => new Set([...prev, id]));
+  const handleAccept = (demand) => {
+    if (onAccept) onAccept(demand);
   };
 
-  const open = availableDemands.filter(d => !accepted.has(d.id));
+  const open = availableDemands.filter(d => !acceptedJobIds.includes(d.id));
 
   return (
     <>

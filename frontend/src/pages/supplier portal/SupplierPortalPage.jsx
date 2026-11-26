@@ -122,12 +122,45 @@ export default function SupplierPortalPage() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  // ── Shared accepted-jobs state: lifted here so AvailableDemands and MyActiveJobs share it ──
+  const [acceptedJobs, setAcceptedJobs] = useState([]);
+
+  const handleAcceptJob = (demand) => {
+    // Build a job entry from the demand card data
+    const job = {
+      id: demand.id,
+      status: 'In Progress',
+      statusKey: 'progress',
+      title: demand.title,
+      facility: demand.title.split(' ').slice(0, 3).join(' '),  // first 3 words as facility name
+      location: demand.location,
+      deadline: 'TBD – awaiting schedule',
+      category: demand.category,
+      description: demand.description,
+      progress: 10,
+      milestones: [
+        { label: 'Job accepted', done: true, date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) },
+        { label: 'BOQ & documents submitted', done: false, date: 'TBD' },
+        { label: 'Equipment dispatched', done: false, date: 'TBD' },
+        { label: 'On-site installation', done: false, date: 'TBD' },
+        { label: 'Commissioning & handover', done: false, date: 'TBD' },
+      ],
+      acceptedAt: Date.now(),
+    };
+    setAcceptedJobs(prev => [job, ...prev.filter(j => j.id !== demand.id)]);
+  };
+
   const renderContent = () => {
     switch (activeTab) {
       case 'demands':
-        return <AvailableDemands />;
+        return (
+          <AvailableDemands
+            acceptedJobIds={acceptedJobs.map(j => j.id)}
+            onAccept={handleAcceptJob}
+          />
+        );
       case 'active-jobs':
-        return <MyActiveJobs />;
+        return <MyActiveJobs acceptedJobs={acceptedJobs} />;
       case 'completed':
         return <Completed />;
       case 'documents':
