@@ -18,8 +18,19 @@ export default function MyRequests({ onSelectRequest, onEditRequest }) {
     const matchesStatus = statusFilter === 'All' || req.status === statusFilter;
     return matchesSearch && matchesStatus;
   }).sort((a, b) => {
-    if (sortBy === 'newest') return (b.id || '').localeCompare(a.id || '');
-    if (sortBy === 'oldest') return (a.id || '').localeCompare(b.id || '');
+    if (sortBy === 'newest') {
+      const tA = a.createdAt || new Date(a.submittedDate || a.date || 0).getTime();
+      const tB = b.createdAt || new Date(b.submittedDate || b.date || 0).getTime();
+      if (tB !== tA) return tB - tA;
+      // Tiebreak: newer items are prepended (lower index = newer)
+      return demands.indexOf(a) - demands.indexOf(b);
+    }
+    if (sortBy === 'oldest') {
+      const tA = a.createdAt || new Date(a.submittedDate || a.date || 0).getTime();
+      const tB = b.createdAt || new Date(b.submittedDate || b.date || 0).getTime();
+      if (tA !== tB) return tA - tB;
+      return demands.indexOf(b) - demands.indexOf(a);
+    }
     if (sortBy === 'facility') return (a.facility || '').localeCompare(b.facility || '');
     return 0;
   });
